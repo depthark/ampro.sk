@@ -1,0 +1,432 @@
+---
+import Brand from "@/components/Brand.astro";
+import Icon from "@/components/Icon.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { site } from "@/data/site";
+
+const { person, services } = site;
+const contacts = [
+  { icon: "device-phone-mobile", label: person.phone, href: `tel:${person.phone.replace(/\s/g, "")}` },
+  { icon: "envelope", label: person.email, href: `mailto:${person.email}` },
+  { icon: "globe-alt", label: site.webLabel, href: site.url },
+];
+---
+
+<BaseLayout>
+  <div class="intro" aria-hidden="true">
+    <div class="intro-logo"><Brand /></div>
+  </div>
+
+  <main class="cards" aria-label={site.name}>
+    <div class="card card--front">
+      <div class="card-brand"><Brand /></div>
+    </div>
+
+    <div class="card">
+      <div class="back">
+        <header class="identity">
+          <h1>{person.name}</h1>
+          <p>{person.profession} · <span class="blue">{person.designer}</span> · <span class="green">{person.energySpecialist}</span></p>
+          <p>{person.role}, {site.company}</p>
+        </header>
+
+        <div class="diagram">
+          <span class="intersection" aria-hidden="true"></span>
+          <span class="marker marker--design blue">
+            <span class="badge" aria-hidden="true">P</span>
+            <span class="marker-label">{services.designLabel}</span>
+          </span>
+          <span class="marker marker--energy green">
+            <span class="badge" aria-hidden="true">E</span>
+            <span class="marker-label">{services.energyLabel}</span>
+          </span>
+        </div>
+
+        <address class="contact">
+          {contacts.map(({ icon, label, href }) => (
+            <a href={href}>
+              <Icon name={icon} class="contact-icon" />
+              <span>{label}</span>
+            </a>
+          ))}
+        </address>
+
+        <p class="wordmark signature" aria-hidden="true"><strong>AM</strong>pro.SK</p>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .cards,
+  .intro {
+    --card-background: #1e1e1e;
+    --blue: #89bef2;
+    --green: #70c6a3;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-content: center;
+    gap: clamp(2rem, 9.625vw, 9.625rem);
+    min-block-size: 100vh;
+    max-inline-size: 100rem;
+    margin-inline: auto;
+    padding-block: 1.5rem 2.625rem;
+    padding-inline: clamp(1rem, 2.375vw, 2.375rem) clamp(1rem, 3.4375vw, 3.4375rem);
+  }
+
+  .card {
+    container-type: inline-size;
+    background: var(--card-background);
+    border: 1px solid #386f9f;
+    box-shadow: 0 0 0 1px #25435d, 0 12px 25px #0003;
+    min-inline-size: 0;
+  }
+
+  .card--front {
+    display: grid;
+    place-items: center;
+    aspect-ratio: 675 / 375;
+  }
+
+  .intro {
+    display: none;
+  }
+
+  .card-brand {
+    inline-size: 67%;
+    padding-block-start: calc(6 * 100cqi / 675);
+  }
+
+  .blue {
+    color: var(--blue);
+  }
+
+  .green {
+    color: var(--green);
+  }
+
+  .back {
+    /* The reference card is 675 units wide. */
+    --unit: calc(100cqi / 675);
+    --inset: calc(44 * var(--unit));
+    --axis-x: 69.1%;
+    --axis-y: 59.2%;
+    --energy-x: 93.5%;
+    --design-y: calc(58 * var(--unit));
+    --badge-size: calc(29 * var(--unit));
+    --stroke: max(1px, calc(1.5 * var(--unit)));
+    --dashes: transparent 0, transparent 26%, currentColor 26%, currentColor 74%,
+      transparent 74%, transparent 87%, currentColor 87%, currentColor 94%, transparent 94%;
+    position: relative;
+    inline-size: 100%;
+    aspect-ratio: 675 / 375;
+  }
+
+  .identity {
+    position: absolute;
+    inset-block-start: calc(49 * var(--unit));
+    inset-inline-start: var(--inset);
+    z-index: 1;
+  }
+
+  .identity h1 {
+    margin: 0 0 calc(6 * var(--unit));
+    font-size: calc(34 * var(--unit));
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+  }
+
+  .identity p {
+    margin: 0;
+    color: #c4c4c4;
+    font-size: max(0.875rem, calc(17.5 * var(--unit)));
+    font-weight: 300;
+    line-height: 1.64;
+  }
+
+  .diagram {
+    position: absolute;
+    inset: 0;
+  }
+
+  .diagram::before,
+  .diagram::after {
+    content: "";
+    position: absolute;
+    opacity: 0.85;
+  }
+
+  .diagram::before {
+    inset: var(--design-y) auto 0 var(--axis-x);
+    inline-size: var(--stroke);
+    color: var(--blue);
+    background: linear-gradient(to bottom, var(--dashes));
+    background-size: 100% calc(22 * var(--unit));
+    transform: translateX(-50%);
+  }
+
+  .diagram::after {
+    inset: var(--axis-y) calc(100% - var(--energy-x)) auto 0;
+    block-size: var(--stroke);
+    color: var(--green);
+    background: linear-gradient(to right, var(--dashes));
+    background-size: calc(23 * var(--unit)) 100%;
+    transform: translateY(-50%);
+  }
+
+  .intersection,
+  .marker {
+    position: absolute;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+  }
+
+  .intersection {
+    inset: var(--axis-y) auto auto var(--axis-x);
+    inline-size: max(0.75rem, calc(19 * var(--unit)));
+    aspect-ratio: 1;
+    background: #fafafa;
+  }
+
+  .marker--design {
+    inset: var(--design-y) auto auto var(--axis-x);
+  }
+
+  .marker--energy {
+    inset: var(--axis-y) auto auto var(--energy-x);
+  }
+
+  .badge {
+    display: grid;
+    place-items: center;
+    inline-size: var(--badge-size);
+    aspect-ratio: 1;
+    border: var(--stroke) solid;
+    border-radius: 50%;
+    background: var(--card-background);
+    font-size: calc(15 * var(--unit));
+    font-weight: 600;
+  }
+
+  .marker-label {
+    position: absolute;
+    font-size: calc(12 * var(--unit));
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .marker--design .marker-label {
+    inset-block-start: 50%;
+    inset-inline-start: calc(100% + 8 * var(--unit));
+    transform: translateY(-50%);
+  }
+
+  .marker--energy .marker-label {
+    inset-block-start: 0;
+    inset-inline-end: calc(100% + 9 * var(--unit));
+    transform: translateY(-50%);
+  }
+
+  .contact {
+    position: absolute;
+    inset-block-end: calc(30 * var(--unit));
+    inset-inline-start: var(--inset);
+    z-index: 1;
+    display: grid;
+    justify-items: start;
+    font-style: normal;
+    font-size: max(0.875rem, calc(17.5 * var(--unit)));
+    line-height: 1.35;
+  }
+
+  .contact a {
+    display: flex;
+    align-items: center;
+    gap: calc(14 * var(--unit));
+    min-block-size: max(1.65rem, calc(30 * var(--unit)));
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .contact a:hover,
+  .contact a:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .contact a:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+  }
+
+  .contact :global(.contact-icon) {
+    flex: none;
+    inline-size: max(1.1rem, calc(20 * var(--unit)));
+    block-size: auto;
+    color: #c4c4c4;
+  }
+
+  .signature {
+    position: absolute;
+    inset: auto var(--inset) calc(40 * var(--unit)) auto;
+    margin: 0;
+    font-size: calc(26 * var(--unit));
+    font-weight: 300;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .signature strong {
+    font-weight: 700;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .intro {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      place-items: center;
+      background: #171717;
+      pointer-events: none;
+      animation: intro-exit 1.45s ease forwards;
+    }
+
+    .intro-logo {
+      inline-size: min(calc(100% - 3rem), 28.25rem);
+    }
+
+    .card {
+      animation: card-reveal 560ms cubic-bezier(0.21, 0.65, 0.32, 1) 850ms both;
+    }
+
+    .diagram::before {
+      transform-origin: top center;
+      animation: draw-vertical 690ms ease-out 1.1s both;
+    }
+
+    .diagram::after {
+      transform-origin: left center;
+      animation: draw-horizontal 720ms ease-out 1.34s both;
+    }
+
+    .marker--design {
+      animation: detail-reveal 350ms ease-out 1.05s both;
+    }
+
+    .intersection {
+      animation: detail-reveal 310ms ease-out 1.55s both;
+    }
+
+    .marker--energy {
+      animation: detail-reveal 380ms ease-out 1.92s both;
+    }
+
+    :global(body:focus-within) .intro {
+      display: none;
+    }
+
+    .cards:focus-within .card {
+      animation: none;
+    }
+
+    @keyframes intro-exit {
+      0%, 53% { opacity: 1; }
+      100% { opacity: 0; visibility: hidden; }
+    }
+
+    @keyframes card-reveal {
+      from { opacity: 0; transform: translateY(12px); }
+    }
+
+    @keyframes draw-vertical {
+      from { transform: translateX(-50%) scaleY(0); }
+    }
+
+    @keyframes draw-horizontal {
+      from { transform: translateY(-50%) scaleX(0); }
+    }
+
+    @keyframes detail-reveal {
+      from { opacity: 0; scale: 0.7; }
+    }
+  }
+
+  @media (max-width: 74rem) {
+    .cards {
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(1rem, 3vw, 2rem);
+      max-inline-size: 46rem;
+      padding: 1.5rem clamp(1rem, 4vw, 2rem);
+    }
+  }
+
+  @container (max-width: 31rem) {
+    .back {
+      --axis-x: 88%;
+      --axis-y: 47%;
+      --energy-x: 93%;
+      --design-y: 38%;
+      --inset: clamp(1rem, 6cqi, 2rem);
+      --badge-size: 1.5rem;
+      min-block-size: 21.5rem;
+    }
+
+    .identity {
+      position: relative;
+      inset: auto;
+      margin-inline: var(--inset);
+      padding-block-start: 1.25rem;
+    }
+
+    .identity h1 {
+      margin-block-end: 0.25rem;
+      font-size: clamp(1.3rem, 5.7cqi, 1.9rem);
+    }
+
+    .identity p {
+      font-size: clamp(0.875rem, 3.7cqi, 1rem);
+    }
+
+    .badge {
+      font-size: 0.75rem;
+    }
+
+    .marker-label {
+      font-size: 0.625rem;
+    }
+
+    .marker--design .marker-label {
+      inset-inline: auto calc(100% + 0.5rem);
+    }
+
+    .marker--energy .marker-label {
+      inset-inline-end: calc(100% + 0.35rem);
+    }
+
+    .contact {
+      inset-block-end: 1rem;
+      font-size: 1rem;
+    }
+
+    .contact a {
+      min-block-size: 2.75rem;
+      gap: 0.65rem;
+    }
+
+    .signature {
+      inset-block-end: 1.85rem;
+      background: var(--card-background);
+      box-shadow: 0 0 0 0.35rem var(--card-background);
+      font-size: clamp(0.875rem, 4.5cqi, 1.3rem);
+    }
+  }
+</style>

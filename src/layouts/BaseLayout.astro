@@ -1,0 +1,90 @@
+---
+import { site } from "@/data/site";
+
+const title = `${site.name} – ${site.services.design} a ${site.services.energy.toLowerCase()}`;
+---
+
+<!doctype html>
+<html lang={site.language}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#171717" />
+    <title>{title}</title>
+    <meta name="description" content={site.description} />
+    <link rel="canonical" href={site.url} />
+    <link rel="icon" href={new URL("favicon.svg", site.url).pathname} type="image/svg+xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="sk_SK" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={site.description} />
+    <meta property="og:url" content={site.url} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  @font-face {
+    font-family: Poppins;
+    src: url("../assets/fonts/Poppins-Light.woff2") format("woff2");
+    font-weight: 300;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: Poppins;
+    src: url("../assets/fonts/Poppins-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: Poppins;
+    src: url("../assets/fonts/Poppins-SemiBold.woff2") format("woff2");
+    font-weight: 600;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: Poppins;
+    src: url("../assets/fonts/Poppins-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: "Poppins Fallback";
+    src: local(Arial);
+    size-adjust: 105%;
+    ascent-override: 100%;
+    descent-override: 33.3%;
+    line-gap-override: 0%;
+  }
+
+  @font-face {
+    font-family: "Poppins Fallback";
+    src: local("Arial Bold");
+    font-weight: 600 700;
+    size-adjust: 105%;
+    ascent-override: 100%;
+    descent-override: 33.3%;
+    line-gap-override: 0%;
+  }
+
+  *, *::after, *::before {
+    box-sizing: border-box;
+  }
+
+  html {
+    background: #171717;
+    color: #fafafa;
+    font-family: Poppins, "Poppins Fallback", sans-serif;
+  }
+
+  body {
+    margin: 0;
+  }
+</style>
