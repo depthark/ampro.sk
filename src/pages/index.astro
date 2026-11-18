@@ -2,7 +2,7 @@
 import Brand from "@/components/Brand.astro";
 import Icon from "@/components/Icon.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import designIcon from "@/assets/artwork/design-icon.webp";
+import designIcon from "@/assets/artwork/design-icon.svg?url";
 import energyIcon from "@/assets/artwork/energy-green-icon.svg?url";
 import { site } from "@/data/site";
 
@@ -34,8 +34,8 @@ const contacts = [
         <div class="diagram">
           <span class="intersection" aria-hidden="true"></span>
           <span class="marker marker--design blue">
-            <span class="badge">
-              <img class="design-icon" src={designIcon.src} width={designIcon.width} height={designIcon.height} alt="" />
+            <span class="badge" aria-hidden="true">
+              <span class="design-icon" style={`--icon: url("${designIcon}")`}></span>
             </span>
             <span class="marker-label">{services.designLabel}<br />{services.scope}</span>
           </span>
@@ -215,16 +215,16 @@ const contacts = [
     background: var(--surface);
   }
 
-  .design-icon {
-    inline-size: 74%;
-    block-size: auto;
-  }
-
+  .design-icon,
   .energy-icon {
     inline-size: 65%;
     aspect-ratio: 1;
     background: currentColor;
     mask: var(--icon) center / contain no-repeat;
+  }
+
+  .design-icon {
+    inline-size: 74%;
   }
 
   .marker-label {
