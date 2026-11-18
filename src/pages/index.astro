@@ -13,17 +13,15 @@ const contacts = [
 ---
 
 <BaseLayout>
-  <div class="intro" aria-hidden="true">
-    <div class="intro-logo"><Brand /></div>
+  <div class="screen intro" aria-hidden="true">
+    <div class="canvas intro-canvas">
+      <div class="intro-logo"><Brand /></div>
+    </div>
   </div>
 
-  <main class="cards" aria-label={site.name}>
-    <div class="card card--front">
-      <div class="card-brand"><Brand /></div>
-    </div>
-
-    <div class="card">
-      <div class="back">
+  <main class="screen page" aria-label={site.name}>
+    <div class="canvas">
+      <div class="content">
         <header class="identity">
           <h1>{person.name}</h1>
           <p>{person.profession} · <span class="blue">{person.designer}</span> · <span class="green">{person.energySpecialist}</span></p>
@@ -58,46 +56,44 @@ const contacts = [
 </BaseLayout>
 
 <style>
-  .cards,
-  .intro {
-    --card-background: #1e1e1e;
+  .screen {
+    --surface: #1e1e1e;
     --blue: #89bef2;
     --green: #70c6a3;
-  }
-
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-content: center;
-    gap: clamp(2rem, 9.625vw, 9.625rem);
-    min-block-size: 100vh;
-    max-inline-size: 100rem;
-    margin-inline: auto;
-    padding-block: 1.5rem 2.625rem;
-    padding-inline: clamp(1rem, 2.375vw, 2.375rem) clamp(1rem, 3.4375vw, 3.4375rem);
-  }
-
-  .card {
-    container-type: inline-size;
-    background: var(--card-background);
-    border: 1px solid #386f9f;
-    box-shadow: 0 0 0 1px #25435d, 0 12px 25px #0003;
-    min-inline-size: 0;
-  }
-
-  .card--front {
+    --viewport-block: 100vh;
     display: grid;
     place-items: center;
-    aspect-ratio: 675 / 375;
+    min-block-size: max(22rem, var(--viewport-block));
+    background: var(--surface);
+  }
+
+  @supports (block-size: 100svb) {
+    .screen {
+      --viewport-block: 100svb;
+    }
+  }
+
+  .page {
+    overflow: clip;
+  }
+
+  .canvas {
+    container-type: inline-size;
+    inline-size: min(100%, max(39.6rem, calc(1.8 * var(--viewport-block))));
+    aspect-ratio: 9 / 5;
   }
 
   .intro {
     display: none;
   }
 
-  .card-brand {
-    inline-size: 67%;
-    padding-block-start: calc(6 * 100cqi / 675);
+  .intro-canvas {
+    display: grid;
+    place-items: center;
+  }
+
+  .intro-logo {
+    inline-size: min(67%, 54rem);
   }
 
   .blue {
@@ -108,26 +104,27 @@ const contacts = [
     color: var(--green);
   }
 
-  .back {
-    /* The reference card is 675 units wide. */
-    --unit: calc(100cqi / 675);
-    --inset: calc(44 * var(--unit));
+  .content {
+    /* Positions use the reference canvas. Type scales up to a readable maximum. */
+    --unit: min(calc(100cqi / 675), 2px);
+    --inset: 6.5%;
     --axis-x: 69.1%;
     --axis-y: 59.2%;
     --energy-x: 93.5%;
-    --design-y: calc(58 * var(--unit));
+    --design-y: 15.5%;
     --badge-size: calc(29 * var(--unit));
     --stroke: max(1px, calc(1.5 * var(--unit)));
+    --vertical-repeat: max(0.875rem, calc(22 * var(--unit)));
+    --horizontal-repeat: max(0.875rem, calc(23 * var(--unit)));
     --dashes: transparent 0, transparent 26%, currentColor 26%, currentColor 74%,
       transparent 74%, transparent 87%, currentColor 87%, currentColor 94%, transparent 94%;
     position: relative;
-    inline-size: 100%;
-    aspect-ratio: 675 / 375;
+    block-size: 100%;
   }
 
   .identity {
     position: absolute;
-    inset-block-start: calc(49 * var(--unit));
+    inset-block-start: 13%;
     inset-inline-start: var(--inset);
     z-index: 1;
   }
@@ -143,7 +140,7 @@ const contacts = [
   .identity p {
     margin: 0;
     color: #c4c4c4;
-    font-size: max(0.875rem, calc(17.5 * var(--unit)));
+    font-size: max(0.9375rem, calc(17.5 * var(--unit)));
     font-weight: 300;
     line-height: 1.64;
   }
@@ -161,20 +158,20 @@ const contacts = [
   }
 
   .diagram::before {
-    inset: var(--design-y) auto 0 var(--axis-x);
+    inset: var(--design-y) auto min(0px, calc((100% - var(--viewport-block)) / 2)) var(--axis-x);
     inline-size: var(--stroke);
     color: var(--blue);
     background: linear-gradient(to bottom, var(--dashes));
-    background-size: 100% calc(22 * var(--unit));
+    background-size: 100% var(--vertical-repeat);
     transform: translateX(-50%);
   }
 
   .diagram::after {
-    inset: var(--axis-y) calc(100% - var(--energy-x)) auto 0;
+    inset: var(--axis-y) calc(100% - var(--energy-x)) auto min(0px, calc((100% - 100vw) / 2));
     block-size: var(--stroke);
     color: var(--green);
     background: linear-gradient(to right, var(--dashes));
-    background-size: calc(23 * var(--unit)) 100%;
+    background-size: var(--horizontal-repeat) 100%;
     transform: translateY(-50%);
   }
 
@@ -207,7 +204,7 @@ const contacts = [
     aspect-ratio: 1;
     border: var(--stroke) solid;
     border-radius: 50%;
-    background: var(--card-background);
+    background: var(--surface);
     font-size: calc(15 * var(--unit));
     font-weight: 600;
   }
@@ -236,13 +233,13 @@ const contacts = [
 
   .contact {
     position: absolute;
-    inset-block-end: calc(30 * var(--unit));
+    inset-block-end: clamp(0.5rem, calc(32% - 8rem), 8%);
     inset-inline-start: var(--inset);
     z-index: 1;
     display: grid;
     justify-items: start;
     font-style: normal;
-    font-size: max(0.875rem, calc(17.5 * var(--unit)));
+    font-size: max(0.9375rem, calc(17.5 * var(--unit)));
     line-height: 1.35;
   }
 
@@ -250,7 +247,7 @@ const contacts = [
     display: flex;
     align-items: center;
     gap: calc(14 * var(--unit));
-    min-block-size: max(1.65rem, calc(30 * var(--unit)));
+    min-block-size: max(2.75rem, calc(30 * var(--unit)));
     color: inherit;
     text-decoration: none;
   }
@@ -275,7 +272,7 @@ const contacts = [
 
   .signature {
     position: absolute;
-    inset: auto var(--inset) calc(40 * var(--unit)) auto;
+    inset: auto var(--inset) 10.7% auto;
     margin: 0;
     font-size: calc(26 * var(--unit));
     font-weight: 300;
@@ -300,22 +297,22 @@ const contacts = [
       animation: intro-exit 1.45s ease forwards;
     }
 
-    .intro-logo {
-      inline-size: min(calc(100% - 3rem), 28.25rem);
-    }
-
-    .card {
-      animation: card-reveal 560ms cubic-bezier(0.21, 0.65, 0.32, 1) 850ms both;
+    .content {
+      animation: content-reveal 560ms cubic-bezier(0.21, 0.65, 0.32, 1) 850ms both;
     }
 
     .diagram::before {
       transform-origin: top center;
-      animation: draw-vertical 690ms ease-out 1.1s both;
+      animation:
+        draw-vertical 690ms ease-out 1.1s both,
+        flow-vertical 1.85s linear 1.1s infinite;
     }
 
     .diagram::after {
       transform-origin: left center;
-      animation: draw-horizontal 720ms ease-out 1.34s both;
+      animation:
+        draw-horizontal 720ms ease-out 1.34s both,
+        flow-horizontal 1.45s linear 1.34s infinite;
     }
 
     .marker--design {
@@ -334,7 +331,7 @@ const contacts = [
       display: none;
     }
 
-    .cards:focus-within .card {
+    .page:focus-within .content {
       animation: none;
     }
 
@@ -343,7 +340,7 @@ const contacts = [
       100% { opacity: 0; visibility: hidden; }
     }
 
-    @keyframes card-reveal {
+    @keyframes content-reveal {
       from { opacity: 0; transform: translateY(12px); }
     }
 
@@ -355,45 +352,51 @@ const contacts = [
       from { transform: translateY(-50%) scaleX(0); }
     }
 
+    @keyframes flow-vertical {
+      to { background-position-y: var(--vertical-repeat); }
+    }
+
+    @keyframes flow-horizontal {
+      to { background-position-x: var(--horizontal-repeat); }
+    }
+
     @keyframes detail-reveal {
       from { opacity: 0; scale: 0.7; }
     }
   }
 
-  @media (max-width: 74rem) {
-    .cards {
-      grid-template-columns: minmax(0, 1fr);
-      gap: clamp(1rem, 3vw, 2rem);
-      max-inline-size: 46rem;
-      padding: 1.5rem clamp(1rem, 4vw, 2rem);
+  @media (max-width: 43rem) {
+    .canvas {
+      inline-size: 100%;
+      min-block-size: max(31rem, var(--viewport-block));
+      aspect-ratio: auto;
     }
-  }
 
-  @container (max-width: 31rem) {
-    .back {
-      --axis-x: 88%;
-      --axis-y: 47%;
-      --energy-x: 93%;
-      --design-y: 38%;
-      --inset: clamp(1rem, 6cqi, 2rem);
-      --badge-size: 1.5rem;
-      min-block-size: 21.5rem;
+    .intro-logo {
+      inline-size: min(80%, 28.25rem);
+    }
+
+    .content {
+      --axis-x: 86%;
+      --axis-y: 51%;
+      --energy-x: 94.5%;
+      --design-y: 40%;
+      --inset: clamp(1.125rem, 7vw, 3rem);
+      --badge-size: 1.625rem;
+      min-block-size: inherit;
     }
 
     .identity {
-      position: relative;
-      inset: auto;
-      margin-inline: var(--inset);
-      padding-block-start: 1.25rem;
+      inset-inline-end: var(--inset);
     }
 
     .identity h1 {
-      margin-block-end: 0.25rem;
-      font-size: clamp(1.3rem, 5.7cqi, 1.9rem);
+      margin-block-end: 0.3rem;
+      font-size: clamp(1.5rem, 6.2vw, 2.5rem);
     }
 
     .identity p {
-      font-size: clamp(0.875rem, 3.7cqi, 1rem);
+      font-size: clamp(0.9375rem, 3.7vw, 1.125rem);
     }
 
     .badge {
@@ -401,7 +404,7 @@ const contacts = [
     }
 
     .marker-label {
-      font-size: 0.625rem;
+      font-size: clamp(0.625rem, 2.75vw, 0.75rem);
     }
 
     .marker--design .marker-label {
@@ -413,20 +416,24 @@ const contacts = [
     }
 
     .contact {
-      inset-block-end: 1rem;
       font-size: 1rem;
     }
 
     .contact a {
-      min-block-size: 2.75rem;
       gap: 0.65rem;
     }
 
     .signature {
-      inset-block-end: 1.85rem;
-      background: var(--card-background);
-      box-shadow: 0 0 0 0.35rem var(--card-background);
-      font-size: clamp(0.875rem, 4.5cqi, 1.3rem);
+      inset-block-end: calc(8% + 0.9rem);
+      background: var(--surface);
+      box-shadow: 0 0 0 0.35rem var(--surface);
+      font-size: clamp(0.875rem, 4vw, 1.35rem);
+    }
+  }
+
+  @media (max-width: 22rem) {
+    .signature {
+      inset-block-end: calc(8% - 0.875rem);
     }
   }
 </style>
