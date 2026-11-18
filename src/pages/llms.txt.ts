@@ -11,6 +11,7 @@ export const GET: APIRoute = () =>
       "## Kontakt",
       "",
       `- ${site.person.name}, ${site.person.role}, ${site.company}`,
+      `- ${site.person.certification.reference} – ${site.person.certification.service}`,
       `- Telefón: ${site.person.phone}`,
       `- E-mail: ${site.person.email}`,
       `- [Vizitka](${site.url})`,

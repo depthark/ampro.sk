@@ -2,6 +2,9 @@
 import Brand from "@/components/Brand.astro";
 import Icon from "@/components/Icon.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import designBadge from "@/assets/artwork/design-badge.webp";
+import energyBadge from "@/assets/artwork/energy-badge.webp";
+import stampWatermark from "@/assets/artwork/stamp-watermark.webp";
 import { site } from "@/data/site";
 
 const { person, services } = site;
@@ -25,18 +28,19 @@ const contacts = [
         <header class="identity">
           <h1>{person.name}</h1>
           <p>{person.profession} · <span class="blue">{person.designer}</span> · <span class="green">{person.energySpecialist}</span></p>
+          <p>{person.certification.reference} – <span class="green">{person.certification.service}</span></p>
           <p>{person.role}, {site.company}</p>
         </header>
 
         <div class="diagram">
           <span class="intersection" aria-hidden="true"></span>
           <span class="marker marker--design blue">
-            <span class="badge" aria-hidden="true">P</span>
-            <span class="marker-label">{services.designLabel}</span>
+            <img class="badge" src={designBadge.src} width={designBadge.width} height={designBadge.height} alt="" />
+            <span class="marker-label">{services.designLabel}<br />{services.scope}</span>
           </span>
           <span class="marker marker--energy green">
-            <span class="badge" aria-hidden="true">E</span>
-            <span class="marker-label">{services.energyLabel}</span>
+            <img class="badge" src={energyBadge.src} width={energyBadge.width} height={energyBadge.height} alt="" />
+            <span class="marker-label">{services.energyLabel}<br />{services.scope}</span>
           </span>
         </div>
 
@@ -50,6 +54,7 @@ const contacts = [
         </address>
 
         <p class="wordmark signature" aria-hidden="true"><strong>AM</strong>pro.SK</p>
+        <img class="watermark" src={stampWatermark.src} width={stampWatermark.width} height={stampWatermark.height} alt="" />
       </div>
     </div>
   </main>
@@ -108,11 +113,11 @@ const contacts = [
     /* Positions use the reference canvas. Type scales up to a readable maximum. */
     --unit: min(calc(100cqi / 675), 2px);
     --inset: 6.5%;
-    --axis-x: 69.1%;
-    --axis-y: 59.2%;
-    --energy-x: 93.5%;
-    --design-y: 15.5%;
-    --badge-size: calc(29 * var(--unit));
+    --axis-x: 67.1%;
+    --axis-y: 59.3%;
+    --energy-x: 90.9%;
+    --design-y: 16.4%;
+    --badge-size: calc(38 * var(--unit));
     --stroke: max(1px, calc(1.5 * var(--unit)));
     --vertical-repeat: max(0.875rem, calc(22 * var(--unit)));
     --horizontal-repeat: max(0.875rem, calc(23 * var(--unit)));
@@ -198,15 +203,11 @@ const contacts = [
   }
 
   .badge {
-    display: grid;
-    place-items: center;
+    display: block;
     inline-size: var(--badge-size);
-    aspect-ratio: 1;
-    border: var(--stroke) solid;
+    block-size: auto;
     border-radius: 50%;
     background: var(--surface);
-    font-size: calc(15 * var(--unit));
-    font-weight: 600;
   }
 
   .marker-label {
@@ -214,7 +215,7 @@ const contacts = [
     font-size: calc(12 * var(--unit));
     font-weight: 600;
     letter-spacing: 0.13em;
-    line-height: 1;
+    line-height: 1.28;
     text-transform: uppercase;
     white-space: nowrap;
   }
@@ -226,9 +227,9 @@ const contacts = [
   }
 
   .marker--energy .marker-label {
-    inset-block-start: 0;
+    inset-block-end: calc(50% + 7 * var(--unit));
     inset-inline-end: calc(100% + 9 * var(--unit));
-    transform: translateY(-50%);
+    text-align: end;
   }
 
   .contact {
@@ -272,9 +273,9 @@ const contacts = [
 
   .signature {
     position: absolute;
-    inset: auto var(--inset) 10.7% auto;
+    inset: 32.4% auto auto 73.3%;
     margin: 0;
-    font-size: calc(26 * var(--unit));
+    font-size: calc(29.5 * var(--unit));
     font-weight: 300;
     letter-spacing: -0.035em;
     line-height: 1;
@@ -283,6 +284,15 @@ const contacts = [
 
   .signature strong {
     font-weight: 700;
+  }
+
+  .watermark {
+    position: absolute;
+    inset-block-end: min(0px, calc((100% - var(--viewport-block)) / 2));
+    inset-inline-end: min(0px, calc((100% - 100vw) / 2));
+    inline-size: 27.25%;
+    block-size: auto;
+    pointer-events: none;
   }
 
   @media (prefers-reduced-motion: no-preference) {
@@ -377,16 +387,17 @@ const contacts = [
     }
 
     .content {
-      --axis-x: 86%;
-      --axis-y: 51%;
+      --axis-x: 84.5%;
+      --axis-y: 57%;
       --energy-x: 94.5%;
-      --design-y: 40%;
+      --design-y: 46%;
       --inset: clamp(1.125rem, 7vw, 3rem);
-      --badge-size: 1.625rem;
+      --badge-size: clamp(1.75rem, 7.5vw, 2.25rem);
       min-block-size: inherit;
     }
 
     .identity {
+      inset-block-start: 10%;
       inset-inline-end: var(--inset);
     }
 
@@ -399,10 +410,6 @@ const contacts = [
       font-size: clamp(0.9375rem, 3.7vw, 1.125rem);
     }
 
-    .badge {
-      font-size: 0.75rem;
-    }
-
     .marker-label {
       font-size: clamp(0.625rem, 2.75vw, 0.75rem);
     }
@@ -412,7 +419,7 @@ const contacts = [
     }
 
     .marker--energy .marker-label {
-      inset-inline-end: calc(100% + 0.35rem);
+      inset-inline-end: calc(50% + 10cqi + 0.35rem);
     }
 
     .contact {
@@ -424,16 +431,12 @@ const contacts = [
     }
 
     .signature {
-      inset-block-end: calc(8% + 0.9rem);
-      background: var(--surface);
-      box-shadow: 0 0 0 0.35rem var(--surface);
-      font-size: clamp(0.875rem, 4vw, 1.35rem);
+      inset: auto auto calc(100% - var(--axis-y) + 0.8rem) var(--inset);
+      font-size: clamp(1.25rem, 5vw, 1.85rem);
     }
-  }
 
-  @media (max-width: 22rem) {
-    .signature {
-      inset-block-end: calc(8% - 0.875rem);
+    .watermark {
+      inline-size: 42%;
     }
   }
 </style>
