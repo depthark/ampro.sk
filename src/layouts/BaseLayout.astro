@@ -2,6 +2,31 @@
 import { site } from "@/data/site";
 
 const title = `${site.name} – ${site.services.design} a ${site.services.energy.toLowerCase()}`;
+const shareImage = new URL("images/ampro-share.png", site.url).href;
+const imageAlt = "Logo AMpro.SK s podtitulom Projekcia a energetika budov na tmavom pozadí";
+const companyId = `${site.url}#ampro`;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": companyId,
+      name: site.name,
+      legalName: site.company,
+      url: site.url,
+      description: site.description,
+    },
+    {
+      "@type": "Person",
+      "@id": `${site.url}#adam-mahdiar`,
+      name: site.person.name,
+      jobTitle: [site.person.profession, site.person.designer, site.person.energySpecialist, site.person.role],
+      telephone: site.person.phone,
+      email: site.person.email,
+      worksFor: { "@id": companyId },
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -17,9 +42,21 @@ const title = `${site.name} – ${site.services.design} a ${site.services.energy
     <link rel="icon" href={new URL("favicon.svg", site.url).pathname} type="image/svg+xml" />
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="sk_SK" />
+    <meta property="og:site_name" content={site.name} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={site.description} />
     <meta property="og:url" content={site.url} />
+    <meta property="og:image" content={shareImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={site.description} />
+    <meta name="twitter:image" content={shareImage} />
+    <meta name="twitter:image:alt" content={imageAlt} />
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData).replaceAll("<", "\\u003c")} />
   </head>
   <body>
     <slot />

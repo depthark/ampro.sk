@@ -1,12 +1,9 @@
 import { defineConfig } from "astro/config";
 
-const site = process.env.PUBLIC_SITE_URL || "https://depthark.github.io";
-const base = process.env.PUBLIC_BASE_PATH || "/";
-
 // https://astro.build/config
 export default defineConfig({
-  site,
-  base,
+  site: "https://ampro.sk",
+  base: "/",
   output: "static",
   devToolbar: {
     enabled: false,

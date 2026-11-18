@@ -2,7 +2,7 @@ export const site = {
   name: "AMpro.SK",
   company: "AMpro SK, s.r.o.",
   language: "sk",
-  description: "Projektovanie a energetická certifikácia budov. Kontakt na Ing. Adama Mahdiara, stavebného inžiniera, projektanta a energetika.",
+  description: "Projektovanie budov a energetická certifikácia (OSO č. 418). Kontakt na Ing. Adama Mahdiara, stavebného inžiniera a konateľa AMpro SK, s.r.o.",
   services: {
     design: "Projekcia",
     designLabel: "Projektovanie",

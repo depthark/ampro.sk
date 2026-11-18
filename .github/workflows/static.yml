@@ -31,15 +31,11 @@ jobs:
         with:
           bun-version: 1.4.4
       - name: Configure GitHub Pages
-        id: pages
         uses: actions/configure-pages@v6
       - name: Install dependencies
         run: bun install --frozen-lockfile
       - name: Build Astro from the repository root
         run: bun run build
-        env:
-          PUBLIC_SITE_URL: ${{ steps.pages.outputs.origin }}
-          PUBLIC_BASE_PATH: ${{ steps.pages.outputs.base_path || '/' }}
       - name: Upload the static site
         uses: actions/upload-pages-artifact@v5
         with:
